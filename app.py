@@ -13,11 +13,13 @@ def download_video():
         return jsonify({"error": "URL is required"}), 400
 
     try:
-        # Using yt-dlp to download the video
+        # Using youtube-dl to download the video
         with tempfile.TemporaryDirectory() as tmpdirname:
             output_path = os.path.join(tmpdirname, '%(title)s.%(ext)s')
+            
+            # youtube-dl command (similar to yt-dlp but without yt-dlp specific features)
             result = subprocess.run(
-                ["yt-dlp", "-o", output_path, url],
+                ["youtube-dl", "-o", output_path, url],
                 capture_output=True,
                 text=True
             )
