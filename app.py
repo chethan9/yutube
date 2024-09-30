@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import subprocess
 import os
+import shutil
 import tempfile
 
 app = Flask(__name__)
@@ -16,11 +17,15 @@ def download_video():
         # Using youtube-dl to download the video with cookies
         with tempfile.TemporaryDirectory() as tmpdirname:
             output_path = os.path.join(tmpdirname, '%(title)s.%(ext)s')
-            cookies_path = "/etc/secrets/cookies.txt"  # Path to the secret cookies file
-            
+            secret_cookies_path = "/etc/secrets/cookies.txt"  # Path to the secret cookies file
+            writable_cookies_path = "/tmp/cookies.txt"  # Path to writable cookies file
+
+            # Copy cookies.txt to a writable location (/tmp)
+            shutil.copy(secret_cookies_path, writable_cookies_path)
+
             # youtube-dl command with cookies
             result = subprocess.run(
-                ["youtube-dl", "--cookies", cookies_path, "-o", output_path, url],
+                ["youtube-dl", "--cookies", writable_cookies_path, "-o", output_path, url],
                 capture_output=True,
                 text=True
             )
