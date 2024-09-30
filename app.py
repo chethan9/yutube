@@ -13,16 +13,18 @@ def download_video():
         return jsonify({"error": "URL is required"}), 400
 
     try:
-        # Using youtube-dl to download the video
+        # Using youtube-dl to download the video with cookies
         with tempfile.TemporaryDirectory() as tmpdirname:
             output_path = os.path.join(tmpdirname, '%(title)s.%(ext)s')
+            cookies_path = "/etc/secrets/cookies.txt"  # Path to the secret cookies file
             
-            # youtube-dl command (similar to yt-dlp but without yt-dlp specific features)
+            # youtube-dl command with cookies
             result = subprocess.run(
-                ["youtube-dl", "-o", output_path, url],
+                ["youtube-dl", "--cookies", cookies_path, "-o", output_path, url],
                 capture_output=True,
                 text=True
             )
+            
             if result.returncode != 0:
                 return jsonify({"error": result.stderr}), 500
 
