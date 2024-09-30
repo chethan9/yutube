@@ -7,8 +7,8 @@ RUN apt-get update && apt-get install -y \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
-# Install yt-dlp via pip
-RUN pip install yt-dlp Flask
+# Install youtube-dl via pip
+RUN pip install youtube-dl Flask
 
 # Set the working directory
 WORKDIR /app
